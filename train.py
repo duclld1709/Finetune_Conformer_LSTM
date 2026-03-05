@@ -155,6 +155,12 @@ def main():
   optimizer = torch.optim.AdamW(list(encoder.parameters()) + list(decoder.parameters()), lr=5e-4, betas=(.9, .98), eps=1e-05 if args.use_amp else 1e-09, weight_decay=args.weight_decay)
   scheduler = TransformerLrScheduler(optimizer, args.d_encoder, args.warmup_steps)
 
+  
+  if torch.cuda.device_count() > 1:
+    print("Using", torch.cuda.device_count(), "GPUs")
+    encoder = nn.DataParallel(encoder)
+    decoder = nn.DataParallel(decoder)
+
   # Print model size
   model_size(encoder, 'Encoder')
   model_size(decoder, 'Decoder')
@@ -165,7 +171,7 @@ def main():
   if torch.cuda.is_available():
     print('Using GPU')
     gpu = True
-    #torch.cuda.set_device(args.gpu)
+    # torch.cuda.set_device(args.gpu)
     criterion = criterion.cuda()
     encoder = encoder.cuda()
     decoder = decoder.cuda()
@@ -329,4 +335,5 @@ def validate(encoder, decoder, char_decoder, criterion, test_loader, text_transf
 
 if __name__ == '__main__':
   main() 
+
 
