@@ -165,7 +165,7 @@ def main():
   if torch.cuda.is_available():
     print('Using GPU')
     gpu = True
-    torch.cuda.set_device(args.gpu)
+    #torch.cuda.set_device(args.gpu)
     criterion = criterion.cuda()
     encoder = encoder.cuda()
     decoder = decoder.cuda()
@@ -329,3 +329,4 @@ def validate(encoder, decoder, char_decoder, criterion, test_loader, text_transf
 
 if __name__ == '__main__':
   main() 
+
